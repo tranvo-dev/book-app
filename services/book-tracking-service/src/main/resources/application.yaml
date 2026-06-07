@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: book-tracking-service
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  datasource:
+    url: null
+    database: null
+    username: null
+    password: null
+    driver-class-name: org.postgresql.Driver
+  cloud:
+    gcp:
+      project-id: null
+      credentials:
+        location: null
+  servlet:                                                                                                                                          
+    multipart:                                                                                                                                      
+      max-file-size: 50MB                                                                                              
+      max-request-size: 50MB
+
+gcs:
+  bucket-name: null
+  
+server:
+  servlet:
+    context-path: /book-tracking/api

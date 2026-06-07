@@ -1,0 +1,11 @@
+---
+servers:
+- url: "http://localhost:8080/book-tracking/api"
+openapi: "3.0.3"
+paths:
+  /books:
+    $ref: "./book-app-api.yaml#/paths/~1books"
+info:
+  title: "merged spec"
+  description: "merged spec"
+  version: "1.0.0"

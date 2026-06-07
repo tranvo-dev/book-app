@@ -1,0 +1,6 @@
+.openapi-generator-ignore
+README.md
+com/tranvodev/book_tracking_service/api/ApiUtil.java
+com/tranvodev/book_tracking_service/api/BooksApi.java
+com/tranvodev/book_tracking_service/dto/ErrorResponse.java
+pom.xml

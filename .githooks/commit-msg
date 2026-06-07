@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Guard commit message format: "<type> : <description>"
+# allowed types: feat, refactor, fix, improvement, experiment
+set -euo pipefail
+
+MSG_FILE="$1"
+SUBJECT="$(head -n1 "$MSG_FILE")"
+
+PATTERN='^(feat|refactor|fix|improvement|experiment): .+'
+
+if ! [[ "$SUBJECT" =~ $PATTERN ]]; then
+  echo "commit message rejected — must match: <type> : <description>"
+  echo "  allowed types: feat | refactor | fix | improvement | experiment"
+  echo "  example: feat : add book search endpoint"
+  echo ""
+  echo "got: $SUBJECT"
+  exit 1
+fi
+
+exit 0

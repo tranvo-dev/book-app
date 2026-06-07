@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Spotless check on staged Java files before commit.
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+SERVICE_DIR="services/book-tracking-service"
+POM="$SERVICE_DIR/pom.xml"
+
+STAGED_JAVA="$(git diff --cached --name-only --diff-filter=ACM -- '*.java' | grep -v '/generated/' || true)"
+
+if [ -z "$STAGED_JAVA" ]; then
+  exit 0
+fi
+
+PATTERN=""
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  abs="$ROOT/$f"
+  esc="$(printf '%s' "$abs" | sed -e 's/[.[\*^$()+?{}|\\]/\\&/g')"
+  if [ -z "$PATTERN" ]; then
+    PATTERN="$esc"
+  else
+    PATTERN="$PATTERN,$esc"
+  fi
+done <<< "$STAGED_JAVA"
+
+echo "spotless: checking staged java files..."
+if ! mvn -q -f "$POM" spotless:check -DspotlessFiles="$PATTERN"; then
+  echo ""
+  echo "spotless check failed on staged files. fix with:"
+  echo "  mvn -f $POM spotless:apply -DspotlessFiles=\"$PATTERN\""
+  echo "then re-stage and commit again."
+  exit 1
+fi
+
+exit 0
