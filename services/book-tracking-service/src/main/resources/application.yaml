@@ -20,6 +20,16 @@ spring:
     multipart:                                                                                                                                      
       max-file-size: 50MB                                                                                              
       max-request-size: 50MB
+  security:
+    oauth2:
+      client:
+        provider:
+          google:
+            client-id: null
+      resourceserver:
+        jwt:
+          jwk-set-uri: null
+          issuer-uri: null
 
 gcs:
   bucket-name: null

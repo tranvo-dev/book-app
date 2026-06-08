@@ -11,6 +11,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +30,7 @@ public class BooksServiceImpl implements BooksService {
     @Override
     @Transactional
     public void uploadAttachment(MultipartFile file) {
+        String userId = getUserId();
         String fileHash = computeSha256(file);
         if (booksRepository.findByFileHash(fileHash).isPresent()) {
             throw new FileUploadException("Duplicated content", HttpStatus.BAD_REQUEST);
@@ -36,6 +40,7 @@ public class BooksServiceImpl implements BooksService {
         book.setTitle(uploadedBlobInfo.getBlobId().getName());
         book.setAttachmentId(uploadedBlobInfo.getGeneratedId());
         book.setFileHash(fileHash);
+        book.setUserId(userId);
         booksRepository.save(book);
     }
 
@@ -49,5 +54,14 @@ public class BooksServiceImpl implements BooksService {
         } catch (NoSuchAlgorithmException | IOException e) {
             throw new FileUploadException("Failed to compute file hash", e);
         }
+    }
+
+    private String getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Ensure the principal type matches a decoded JWT
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt)) {
+            throw new IllegalArgumentException("Invalid userId");
+        }
+        return ((Jwt) authentication.getPrincipal()).getSubject();
     }
 }
