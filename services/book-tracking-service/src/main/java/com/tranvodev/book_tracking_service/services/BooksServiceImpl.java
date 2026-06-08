@@ -20,10 +20,10 @@ public class BooksServiceImpl implements BooksService {
     @Override
     @Transactional
     public void uploadAttachment(MultipartFile file) {
-        BlobInfo uploadedBlobInfo = this.gcsUploadService.uploadFile(file);
+        BlobInfo uploadedBlobInfo = gcsUploadService.uploadFile(file);
         BookEntity book = new BookEntity();
         book.setTitle(uploadedBlobInfo.getBlobId().getName());
         book.setAttachmentId(uploadedBlobInfo.getGeneratedId());
-        this.booksRepository.save(book);
+        booksRepository.save(book);
     }
 }
