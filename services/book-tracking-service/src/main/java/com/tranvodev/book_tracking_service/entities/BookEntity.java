@@ -18,4 +18,7 @@ public class BookEntity extends BaseEntity {
 
     @Column(name = "attachment_id")
     private String attachmentId;
+
+    @Column(name = "file_hash", unique = true)
+    private String fileHash;
 }

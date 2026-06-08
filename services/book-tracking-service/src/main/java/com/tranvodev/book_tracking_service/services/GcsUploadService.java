@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,8 @@ public class GcsUploadService {
         try {
             String extractedFileType = extrackMimeType(file);
             if (!isAllowedToUpload(extractedFileType)) {
-                throw new FileUploadException(String.format("Not allowed file type: %s", extractedFileType));
+                throw new FileUploadException(
+                        String.format("Not allowed file type: %s", extractedFileType), HttpStatus.BAD_REQUEST);
             }
 
             BlobInfo blobInfo = getBlobInfo(file, fileName, extractedFileType);
