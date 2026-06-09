@@ -2,15 +2,8 @@ package com.tranvodev.book_tracking_service.services;
 
 import com.google.cloud.storage.BlobInfo;
 import com.tranvodev.book_tracking_service.entities.BookEntity;
-import com.tranvodev.book_tracking_service.exceptions.FileUploadException;
 import com.tranvodev.book_tracking_service.repositories.BooksRepository;
 import jakarta.transaction.Transactional;
-import java.io.IOException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -31,37 +24,16 @@ public class BooksServiceImpl implements BooksService {
     @Transactional
     public void addBook(MultipartFile file) {
         String userId = getUserId();
-        String fileHash = computeSha256(file);
-        if (isDuplicatedContent(fileHash)) {
-            throw new FileUploadException("Duplicated content", HttpStatus.BAD_REQUEST);
-        }
         BlobInfo uploadedBlobInfo = gcsUploadService.uploadFile(userId, file);
-        saveBookInfo(userId, fileHash, uploadedBlobInfo);
+        saveBookInfo(userId, uploadedBlobInfo);
     }
 
-    private boolean isDuplicatedContent(String fileHash) {
-        return booksRepository.findByFileHash(fileHash).isPresent();
-    }
-
-    private void saveBookInfo(String userId, String fileHash, BlobInfo uploadedBlobInfo) {
+    private void saveBookInfo(String userId, BlobInfo uploadedBlobInfo) {
         BookEntity book = new BookEntity();
         book.setTitle(uploadedBlobInfo.getBlobId().getName());
         book.setAttachmentId(uploadedBlobInfo.getGeneratedId());
-        book.setFileHash(fileHash);
         book.setUserId(userId);
         booksRepository.save(book);
-    }
-
-    private String computeSha256(MultipartFile file) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            try (DigestInputStream dis = new DigestInputStream(file.getInputStream(), digest)) {
-                dis.transferTo(java.io.OutputStream.nullOutputStream());
-            }
-            return HexFormat.of().formatHex(digest.digest());
-        } catch (NoSuchAlgorithmException | IOException e) {
-            throw new FileUploadException("Failed to compute file hash", e);
-        }
     }
 
     private String getUserId() {
