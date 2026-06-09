@@ -17,7 +17,7 @@ public class BooksController implements BooksApi {
 
     @Override
     public ResponseEntity<Void> uploadBook(MultipartFile file) {
-        this.booksService.uploadAttachment(file);
+        this.booksService.addBook(file);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

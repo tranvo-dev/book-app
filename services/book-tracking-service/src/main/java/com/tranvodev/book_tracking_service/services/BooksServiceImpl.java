@@ -29,13 +29,21 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     @Transactional
-    public void uploadAttachment(MultipartFile file) {
+    public void addBook(MultipartFile file) {
         String userId = getUserId();
         String fileHash = computeSha256(file);
-        if (booksRepository.findByFileHash(fileHash).isPresent()) {
+        if (isDuplicatedContent(fileHash)) {
             throw new FileUploadException("Duplicated content", HttpStatus.BAD_REQUEST);
         }
-        BlobInfo uploadedBlobInfo = gcsUploadService.uploadFile(file);
+        BlobInfo uploadedBlobInfo = gcsUploadService.uploadFile(userId, file);
+        saveBookInfo(userId, fileHash, uploadedBlobInfo);
+    }
+
+    private boolean isDuplicatedContent(String fileHash) {
+        return booksRepository.findByFileHash(fileHash).isPresent();
+    }
+
+    private void saveBookInfo(String userId, String fileHash, BlobInfo uploadedBlobInfo) {
         BookEntity book = new BookEntity();
         book.setTitle(uploadedBlobInfo.getBlobId().getName());
         book.setAttachmentId(uploadedBlobInfo.getGeneratedId());
