@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: book-authorization-server
+  datasource:
+    url: jdbc:postgresql://localhost:5432/book_auth_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          book-client-gateway:
+            registration:
+              client-id: "book-client-gateway"
+              client-secret: "{noop}secret"
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "http://127.0.0.1:8081/login/oauth2/code/book-client-gateway"
+              post-logout-redirect-uris:
+                - "http://127.0.0.1:8081/"
+              scopes:
+                - "openid"
+                - "profile"
+            require-authorization-consent: true
+
+server:
+  port: 9000
+
+logging:
+  level:
+    org.springframework.security: DEBUG

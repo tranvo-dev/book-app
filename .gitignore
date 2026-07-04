@@ -1,3 +1,5 @@
 .DS_Store
-services/book-tracking-service/src/main/resources/application-local.yaml
-services/book-tracking-service/src/main/resources/gcp/*
+
+### IDE ###
+.idea/
+*.iml

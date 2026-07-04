@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: book-client-gateway
+  security:
+    oauth2:
+      client:
+        registration:
+          book-client-gateway:
+            client-id: "book-client-gateway"
+            client-secret: null
+            client-authentication-method: "client_secret_basic"
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/book-client-gateway"
+            scope: openid, profile
+        provider:
+          book-client-gateway:
+            authorization-uri: null
+            token-uri: null
+
+server:
+  port: 8081

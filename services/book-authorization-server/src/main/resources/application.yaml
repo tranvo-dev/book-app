@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: book-authorization-server
+  datasource:
+    url: null
+    username: null
+    password: null
+    driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          book-client-gateway:
+            registration:
+              client-id: "book-client-gateway"
+              client-secret: null
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - ""
+              post-logout-redirect-uris:
+                - ""
+              scopes:
+                - "openid"
+                - "profile"
+            require-authorization-consent: true
+
+server:
+  port: 9000
