@@ -56,10 +56,6 @@ Start the application
 ```bash
 mvn -f services/book-authorization-server/pom.xml spring-boot:run -Dspring-boot.run.profiles=local
 ```
-Format code with spotless
-```bash
-mvn -f services/book-authorization-server/pom.xml spotless:apply
-```
 
 ### book-core-service
 Start the local database
@@ -70,7 +66,16 @@ Start the application
 ```bash
 mvn -f services/book-core-service/pom.xml spring-boot:run -Dspring-boot.run.profiles=local
 ```
-Format code with spotless
+
+# Code Formatting
+
+Spotless is configured once at the repo root (`pom.xml`) and formats the Java code of every service.
+
+Format all services:
 ```bash
-mvn -f services/book-core-service/pom.xml spotless:apply
+mvn spotless:apply
+```
+Check formatting without modifying files (also run by the pre-commit hook):
+```bash
+mvn spotless:check
 ```
