@@ -7,6 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface UserMapper {
-	@Mapping(target = "memberSince", source = "createdAt")
-	UserInfo toUserInfo(User user);
+    @Mapping(target = "memberSince", source = "createdAt")
+    UserInfo toUserInfo(User user);
 }

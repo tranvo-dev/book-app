@@ -14,23 +14,27 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	@Override
-	public @NonNull UserDetails loadUserByUsername(@NonNull String username) {
-		return this.userRepository.findByEmail(username)
-				.orElseThrow(() -> new UsernameNotFoundException("User does not exist"));
-	}
+    @Override
+    public @NonNull UserDetails loadUserByUsername(@NonNull String username) {
+        return this.userRepository
+                .findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User does not exist"));
+    }
 
-	@Transactional
-	public void register(UserRegistrationRequest request) {
-		if (userRepository.findByEmail(request.email()).isPresent()) {
-			throw new IllegalArgumentException("Email already in use");
-		}
-		com.tranvodev.book_authorization_server.entities.User user = new com.tranvodev.book_authorization_server.entities.User(
-				request.firstName(), request.lastName(), request.email(),
-				this.passwordEncoder.encode(request.password()));
-		this.userRepository.save(user);
-	}
+    @Transactional
+    public void register(UserRegistrationRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+        com.tranvodev.book_authorization_server.entities.User user =
+                new com.tranvodev.book_authorization_server.entities.User(
+                        request.firstName(),
+                        request.lastName(),
+                        request.email(),
+                        this.passwordEncoder.encode(request.password()));
+        this.userRepository.save(user);
+    }
 }
