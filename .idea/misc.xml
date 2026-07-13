@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/services/book-core-service/pom.xml" />
         <option value="$PROJECT_DIR$/services/book-authorization-server/pom.xml" />
         <option value="$PROJECT_DIR$/services/book-client-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
