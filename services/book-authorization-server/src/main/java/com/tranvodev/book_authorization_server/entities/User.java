@@ -6,12 +6,13 @@ import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 import lombok.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "users")
@@ -34,7 +35,12 @@ public class User extends Base implements UserDetails {
     }
 
     @Override
+    public @Nullable String getPassword() {
+        return this.password;
+    }
+
+    @Override
     public @NonNull String getUsername() {
-        return this.getEmail();
+        return this.email;
     }
 }
