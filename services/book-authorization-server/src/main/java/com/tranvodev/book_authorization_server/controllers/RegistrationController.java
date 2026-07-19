@@ -4,6 +4,7 @@ import com.tranvodev.book_authorization_server.dtos.requests.UserRegistrationFor
 import com.tranvodev.book_authorization_server.dtos.requests.UserRegistrationRequest;
 import com.tranvodev.book_authorization_server.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +40,10 @@ public class RegistrationController {
         try {
             userService.register(new UserRegistrationRequest(
                     formData.firstName(), formData.lastName(), formData.email(), formData.password()));
-        } catch (IllegalArgumentException ex) {
+        } catch (DataIntegrityViolationException | IllegalArgumentException ex) {
+            // Handle concurrent registration requests for 2 same emails
+            // findByEmail then save — two concurrent registers both pass check
+            // DB unique constrain catches, but it throws DataIntegrityViolationException instead of IllegalArgumentException
             return redirectWithError("email_taken", formData.email());
         }
 
