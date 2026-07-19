@@ -5,7 +5,7 @@ import com.tranvodev.book_authorization_server.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "memberSince", source = "createdAt")
     UserInfo toUserInfo(User user);
