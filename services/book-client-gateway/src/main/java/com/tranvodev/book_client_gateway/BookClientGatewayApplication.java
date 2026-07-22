@@ -13,11 +13,4 @@ public class BookClientGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(BookClientGatewayApplication.class, args);
     }
-
-    @Bean
-    RouteLocator gateway(RouteLocatorBuilder builder) {
-        return builder.routes()
-                .route(rs -> rs.path("/").filters(GatewayFilterSpec::tokenRelay).uri("http://localhost:9000"))
-                .build();
-    }
 }

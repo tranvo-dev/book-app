@@ -1,6 +1,15 @@
 spring:
   application:
     name: book-client-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: book-core-service
+          uri: null # Downstream service URL
+          predicates:
+            - Path=/**
+          filters:
+            - TokenRelay # Forwards the verified token downstream
   security:
     oauth2:
       client:

@@ -59,9 +59,13 @@ The ultimate book app for surviving boring work hours. Shhh... we won't tell you
 
 # Oauth2 Main Flow
 
+Follow the pattern: Smart Gateway, dumb services. 
+
+    
+
 ```mermaid
 sequenceDiagram
-    participant User
+    actor User
     participant Gateway as book-client-gateway
     participant AuthServer as book-authorization-server
     participant Core as book-core-service (resource server)
@@ -70,16 +74,17 @@ sequenceDiagram
     Gateway->>+AuthServer: Redirect to http://localhost:9000/api/v1/auth/oauth2/authorize<br/>(client_id, redirect_uri, scope, state, code_challenge)
     AuthServer-->>-User: Not authenticated -> redirect to /api/v1/auth/login.html
     User->>+AuthServer: Submits email + password on login form
-    AuthServer-->>AuthServer: Verify credentials with database<br/>
+    AuthServer->>AuthServer: Verify credentials with database<br/>
     AuthServer-->>User: Shows consent page (first-time authorization only)
     User->>AuthServer: Approves requested scopes
-    AuthServer->>-Gateway: Redirect to redirect_uri (http://127.0.0.1:8081/login/oauth2/code/book-client-gateway)<br/>with authorization code + state
+    AuthServer-->>-Gateway: Redirect to redirect_uri (http://127.0.0.1:8081/login/oauth2/code/book-client-gateway)<br/>with authorization code + state
     Gateway->>+AuthServer: POST /api/v1/auth/oauth2/token<br/>Authorization: Basic client_id:client_secret<br/>grant_type=authorization_code, code, code_verifier
     AuthServer-->>-Gateway: Returns access_token (JWT) + refresh_token
-    Gateway->>+Core: API call, Authorization: Bearer <access_token>
-    Core-->>Core: Validate JWT locally using cached JWK set<br/>from /api/v1/auth/oauth2/jwks (no call to AuthServer per request)<br/>
-    Core-->>-Gateway: API response
-    Gateway-->>-User: Response
+    User->>+Gateway: API call, Authorization: Bearer <access_token>
+    Gateway->>Gateway:Validate JWT locally using cached JWK set<br/>from /api/v1/auth/oauth2/jwks (no call to AuthServer per request)
+    Gateway->>+Core: Forward API call, Authorization: Bearer <access_token>
+    Core-->>Gateway: Return response
+    Gateway-->>-User: Forward the response
 ```
 
 # Local Setup
