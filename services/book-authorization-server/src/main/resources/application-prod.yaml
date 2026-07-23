@@ -1,0 +1,6 @@
+app:
+  security:
+    keystore:
+      location: null
+      password: null
+      alias: null
