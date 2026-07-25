@@ -8,24 +8,24 @@ The ultimate book app for surviving boring work hours. Shhh... we won't tell you
 
 | Category         | Technology                                                              |
 |------------------|-------------------------------------------------------------------------|
-| Language         | Java 21                                                                  |
-| Framework        | Spring Boot (4.0.x / 4.1.x), Spring Cloud (2025.1.x)                     |
+| Language         | Java 21                                                                 |
+| Framework        | Spring Boot (4.0.x / 4.1.x), Spring Cloud (2025.1.x)                    |
 | Build            | Maven (per-service Spring Boot parent, repo-root Spotless aggregator)   |
-| Database         | PostgreSQL 17                                                            |
-| DB Migration     | Flyway                                                                   |
+| Database         | PostgreSQL 17                                                           |
+| DB Migration     | Flyway                                                                  |
 | Persistence      | Spring Data JPA / Hibernate                                             |
 | API Docs         | springdoc-openapi (Swagger UI), OpenAPI Generator (`book-core-service`) |
 | Mapping          | MapStruct                                                               |
-| Boilerplate      | Lombok                                                                   |
-| Containerization | Docker Compose (local Postgres per service)                            |
+| Boilerplate      | Lombok                                                                  |
+| Containerization | Docker Compose (local Postgres per service)                             |
 
 ### Security (OAuth2)
 
-| Service                     | Role                    | Key Dependencies                                          |
-|-----------------------------|-------------------------|-----------------------------------------------------------|
-| `book-authorization-server` | Authorization Server    | Spring Authorization Server, Spring Security, Thymeleaf   |
-| `book-client-gateway`       | OAuth2 Client / Gateway | Spring Cloud Gateway (WebFlux), OAuth2 Client             |
-| `book-core-service`         | Resource Server         | OAuth2 Resource Server (local JWT validation via JWK set) |
+| Service                     | Role                    | Key Dependencies                                                                                         |
+|-----------------------------|-------------------------|----------------------------------------------------------------------------------------------------------|
+| `book-authorization-server` | Authorization Server    | Spring Authorization Server, Spring Security, Thymeleaf                                                  |
+| `book-client-gateway`       | OAuth2 Client / Gateway | Spring Cloud Gateway (WebFlux), OAuth2 Client, OAuth2 Resource Server (local JWT validation via JWK set) |
+| `book-core-service`         | Actual resource Server  |                                                                                                          |
 
 ### book-core-service extras
 
