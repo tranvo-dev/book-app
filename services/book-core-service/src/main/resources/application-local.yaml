@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: book-core-service
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  datasource:
+    url: jdbc:postgresql://localhost:5433/book_core_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  cloud:
+    gcp:
+      project-id: book-app-498708
+      credentials:
+        location: ${GCP_CREDENTIALS_LOCATION:file:../../keys/key.json}
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+gcs:
+  bucket-name: book-app-bucket
+
+server:
+  servlet:
+    context-path: /
