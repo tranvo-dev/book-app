@@ -3,13 +3,15 @@ spring:
     name: book-client-gateway
   cloud:
     gateway:
-      routes:
-        - id: book-core-service
-          uri: null # Downstream service URL
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay # Forwards the verified token downstream
+      server:
+        webflux:
+          routes:
+            - id: book-core-service
+              uri: null # Downstream service URL
+              predicates:
+                - Path=/books/**
+              filters:
+                - TokenRelay # Forwards the verified token downstream
   security:
     oauth2:
       client:

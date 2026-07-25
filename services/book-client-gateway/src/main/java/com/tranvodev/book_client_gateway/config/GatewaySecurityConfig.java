@@ -19,7 +19,9 @@ public class GatewaySecurityConfig {
             // 2. Define your "Smart" forwarding rules
             .authorizeExchange(exchanges -> exchanges
                 .anyExchange().authenticated()
-            );
+            )
+            // 3. Unauthenticated browser requests get redirected to the authorization server
+            .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 

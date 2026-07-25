@@ -3,13 +3,15 @@ spring:
     name: book-client-gateway
   cloud:
     gateway:
-      routes:
-        - id: book-core-service
-          uri: http://localhost:8080 # Downstream service URL
-          predicates:
-            - Path=/**
-          filters:
-            - TokenRelay # Forwards the verified token downstream
+      server:
+        webflux:
+          routes:
+            - id: book-core-service
+              uri: http://localhost:8080 # Downstream service URL
+              predicates:
+                - Path=/books/**
+              filters:
+                - TokenRelay # Forwards the verified token downstream
   security:
     oauth2:
       resourceserver:
@@ -20,7 +22,7 @@ spring:
         registration:
           book-client-gateway:
             client-id: "book-client-gateway"
-            client-secret: "{noop}secret"
+            client-secret: "secret"
             client-authentication-method: "client_secret_basic"
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/book-client-gateway"
@@ -29,6 +31,7 @@ spring:
           book-client-gateway:
             authorization-uri: http://localhost:9000/oauth2/authorize
             token-uri: http://localhost:9000/oauth2/token
+            issuer-uri: http://localhost:9000
 
 server:
   port: 8081
