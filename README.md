@@ -1,48 +1,48 @@
-Book App
---
+## Book App
+
 The ultimate book app for surviving boring work hours. Shhh... we won't tell your boss! 🤫📚
 
 # Tech Stack & Tools
 
 ### Core
 
-| Category         | Technology                                                              |
-|------------------|-------------------------------------------------------------------------|
-| Language         | Java 21                                                                 |
-| Framework        | Spring Boot (4.0.x / 4.1.x), Spring Cloud (2025.1.x)                    |
-| Build            | Maven (per-service Spring Boot parent, repo-root Spotless aggregator)   |
-| Database         | PostgreSQL 17                                                           |
-| DB Migration     | Flyway                                                                  |
-| Persistence      | Spring Data JPA / Hibernate                                             |
-| API Docs         | springdoc-openapi (Swagger UI), OpenAPI Generator (`book-core-service`) |
-| Mapping          | MapStruct                                                               |
-| Boilerplate      | Lombok                                                                  |
-| Containerization | Docker Compose (local Postgres per service)                             |
+| Category | Technology |
+| --- | --- |
+| Language | Java 21 |
+| Framework | Spring Boot (4.0.x / 4.1.x), Spring Cloud (2025.1.x) |
+| Build | Maven (per-service Spring Boot parent, repo-root Spotless aggregator) |
+| Database | PostgreSQL 17 |
+| DB Migration | Flyway |
+| Persistence | Spring Data JPA / Hibernate |
+| API Docs | springdoc-openapi (Swagger UI), OpenAPI Generator (`book-core-service`) |
+| Mapping | MapStruct |
+| Boilerplate | Lombok |
+| Containerization | Docker Compose (local Postgres per service) |
 
 ### Security (OAuth2)
 
-| Service                     | Role                    | Key Dependencies                                                                                         |
-|-----------------------------|-------------------------|----------------------------------------------------------------------------------------------------------|
-| `book-authorization-server` | Authorization Server    | Spring Authorization Server, Spring Security, Thymeleaf                                                  |
-| `book-client-gateway`       | OAuth2 Client / Gateway | Spring Cloud Gateway (WebFlux), OAuth2 Client, OAuth2 Resource Server (local JWT validation via JWK set) |
-| `book-core-service`         | Actual resource Server  |                                                                                                          |
+| Service | Role | Key Dependencies |
+| --- | --- | --- |
+| `book-authorization-server` | Authorization Server | Spring Authorization Server, Spring Security, Thymeleaf |
+| `book-client-gateway` | OAuth2 Client / Gateway | Spring Cloud Gateway (WebFlux), OAuth2 Client, OAuth2 Resource Server (local JWT validation via JWK set) |
+| `book-core-service` | Actual resource Server |  |
 
 ### book-core-service extras
 
-| Category           | Technology                                 |
-|--------------------|--------------------------------------------|
-| Cloud Storage      | Spring Cloud GCP (Google Cloud Storage)    |
-| Service-to-Service | Spring Cloud OpenFeign                     |
-| File Processing    | Apache Tika (content-type detection)       |
-| JSON               | Jackson 3                                  |
+| Category | Technology |
+| --- | --- |
+| Cloud Storage | Spring Cloud GCP (Google Cloud Storage) |
+| Service-to-Service | Spring Cloud OpenFeign |
+| File Processing | Apache Tika (content-type detection) |
+| JSON | Jackson 3 |
 
 ### Developer Tooling
 
-| Tool       | Purpose                                                    |
-|------------|------------------------------------------------------------|
-| Spotless   | Code formatting (Palantir Java Format), enforced repo-wide |
-| Git hooks  | Pre-commit `spotless:check` (`.githooks`)                  |
-| CODEOWNERS | Review ownership                                           |
+| Tool | Purpose |
+| --- | --- |
+| Spotless | Code formatting (Palantir Java Format), enforced repo-wide |
+| Git hooks | Pre-commit `spotless:check` (`.githooks`) |
+| CODEOWNERS | Review ownership |
 
 # Project Folder Structure
 
@@ -54,14 +54,11 @@ The ultimate book app for surviving boring work hours. Shhh... we won't tell you
     ├───book-authorization-server       # Oauth2 Authorization server: responsible for managing users, authentication and authorization
     ├───book-client-gateway             # Oauth2 Client: acts as an gateway which is responsible for forwarding request to auth server or resource server if authenticated
     └───book-core-service               # Oauth2 Resource server: responsible for managing core data of the book application (i.e. book data, attachment data, read tracking progress...)
-
 ```
 
 # Oauth2 Main Flow
 
-Follow the pattern: Smart Gateway, dumb services. 
-
-    
+Follow the pattern: Dumb Gateway, smart services.
 
 ```mermaid
 sequenceDiagram
@@ -81,35 +78,51 @@ sequenceDiagram
     Gateway->>+AuthServer: POST /api/v1/auth/oauth2/token<br/>Authorization: Basic client_id:client_secret<br/>grant_type=authorization_code, code, code_verifier
     AuthServer-->>-Gateway: Returns access_token (JWT) + refresh_token
     User->>+Gateway: API call, Authorization: Bearer <access_token>
-    Gateway->>Gateway:Validate JWT locally using cached JWK set<br/>from /api/v1/auth/oauth2/jwks (no call to AuthServer per request)
     Gateway->>+Core: Forward API call, Authorization: Bearer <access_token>
+    Core->>Core: Validate JWT locally using cached JWK set<br/>from /api/v1/auth/oauth2/jwks (no call to AuthServer per request)
     Core-->>Gateway: Return response
     Gateway-->>-User: Forward the response
 ```
 
+## Design decisions:
+| Question                                                                    | Answer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1. How does the session be configured in this system? Stateful or Stateless | 1. The Gateway Level (Stateful & Protected)<br/> - Session is Needed: The Gateway needs a server-side session (or a session cookie) to store the access token, refresh token, and user details after they log in.<br/> - CSRF is Required: Because the frontend relies on a browser cookie to talk to the Gateway, your application is vulnerable to CSRF attacks. Spring Security automatically enables CSRF protection here to block forged cross-site requests.<br/> - The Token Relay: When a request passes through, the Gateway automatically strips the frontend cookie, grabs the real JWT from its session storage, and injects it into the Authorization: Bearer <JWT> header before forwarding the request to your backend.<br/> 2. The Backend Data API Level (Stateless) <br/> - No Session / No CSRF: It only accepts requests that have the Authorization: Bearer <JWT> header attached by the Gateway. Since it does not use cookies, it is immune to CSRF and does not need sessions. |
+| 2. What is the cons of the in memory sessions?                              | 1. if we have 2 instances of the gateway, they don't share RAM. If a user's session is on Instance A, and the load balancer sends their next request to Instance B, Instance B won't recognize them and will force them to log in again.<br/> 2. They sessions will be wiped out when the gateway restarts.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 3. How to overcome the limitation of in memory sessions                     | Common and standard approach is to store those sessions to Redis                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+
 # Local Setup
 
 ### book-client-gateway
+
 ```bash
 mvn -f services/book-client-gateway/pom.xml spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 ### book-authorization-server
+
 Start the local database
+
 ```bash
 docker compose -f services/book-authorization-server/compose.yaml up -d
 ```
+
 Start the application
+
 ```bash
 mvn -f services/book-authorization-server/pom.xml spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 ### book-core-service
+
 Start the local database
+
 ```bash
 docker compose -f services/book-core-service/compose.yaml up -d
 ```
+
 Start the application
+
 ```bash
 mvn -f services/book-core-service/pom.xml spring-boot:run -Dspring-boot.run.profiles=local
 ```
@@ -119,10 +132,13 @@ mvn -f services/book-core-service/pom.xml spring-boot:run -Dspring-boot.run.prof
 Spotless is configured once at the repo root (`pom.xml`) and formats the Java code of every service.
 
 Format all services:
+
 ```bash
 mvn spotless:apply
 ```
+
 Check formatting without modifying files (also run by the pre-commit hook):
+
 ```bash
 mvn spotless:check
 ```

@@ -20,7 +20,12 @@ spring:
     multipart:                                                                                                                                      
       max-file-size: 50MB                                                                                              
       max-request-size: 50MB
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Used by the Gateway to pull public keys and verify signatures locally
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
 gcs:
   bucket-name: null
   
