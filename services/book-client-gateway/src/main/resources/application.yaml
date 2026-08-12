@@ -9,7 +9,7 @@ spring:
             - id: book-core-service
               uri: null # Downstream service URL
               predicates:
-                - Path=/books/**
+                - Path=/**
               filters:
                 - TokenRelay # Forwards the verified token downstream
   security:
