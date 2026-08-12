@@ -13,11 +13,11 @@ import org.springframework.core.io.Resource;
 public class GoogleCloudStorageConfig {
 
     @Value("${spring.cloud.gcp.credentials.location}")
-    private Resource credentialLocaltion;
+    private Resource credentialLocation;
 
     @Bean
     public Storage storage() throws IOException {
-        GoogleCredentials credentials = GoogleCredentials.fromStream(credentialLocaltion.getInputStream());
+        GoogleCredentials credentials = GoogleCredentials.fromStream(credentialLocation.getInputStream());
         return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
     }
 }
