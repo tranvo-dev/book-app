@@ -84,8 +84,10 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        DelegatingPasswordEncoder encoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        encoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder()); // existing unprefixed hashes, such as passwords without `{noop}` prefix
+        DelegatingPasswordEncoder encoder =
+                (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        encoder.setDefaultPasswordEncoderForMatches(
+                new BCryptPasswordEncoder()); // existing unprefixed hashes, such as passwords without `{noop}` prefix
         return encoder;
     }
 

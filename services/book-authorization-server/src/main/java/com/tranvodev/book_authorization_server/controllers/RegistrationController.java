@@ -43,7 +43,8 @@ public class RegistrationController {
         } catch (DataIntegrityViolationException | IllegalArgumentException ex) {
             // Handle concurrent registration requests for 2 same emails
             // findByEmail then save — two concurrent registers both pass check
-            // DB unique constrain catches, but it throws DataIntegrityViolationException instead of IllegalArgumentException
+            // DB unique constrain catches, but it throws DataIntegrityViolationException instead of
+            // IllegalArgumentException
             return redirectWithError("email_taken", formData.email());
         }
 
