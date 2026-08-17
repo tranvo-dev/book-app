@@ -2,5 +2,7 @@
 README.md
 com/tranvodev/book_core_service/api/ApiUtil.java
 com/tranvodev/book_core_service/api/BooksApi.java
+com/tranvodev/book_core_service/api/UsersApi.java
 com/tranvodev/book_core_service/dto/ErrorResponse.java
+com/tranvodev/book_core_service/dto/UserResponse.java
 pom.xml

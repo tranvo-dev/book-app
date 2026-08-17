@@ -1,7 +1,6 @@
 package com.tranvodev.book_core_service.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +17,8 @@ public class BookEntity extends BaseEntity {
 
     @Column(name = "attachment_id")
     private String attachmentId;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private UserEntity owner;
 }

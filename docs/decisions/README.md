@@ -48,6 +48,7 @@ Small, obvious refactors or pure formatting changes don't need one.
 | [0010](0010-gcs-storage-with-dedup-upload.md) | Google Cloud Storage for attachments, with duplicate-content handling | book-core-service | Accepted | 2026-06-08 |
 | [0011](0011-spotless-formatting-enforced-repo-wide.md) | Enforce formatting repo-wide with Spotless + pre-commit hook, not per-service | global | Accepted | 2026-07-12 |
 | [0012](0012-gateway-no-path-prefix-stripping-for-swagger.md) | Don't rely on gateway path-prefix stripping for service-hosted Swagger UI | book-client-gateway, book-core-service | Accepted | 2026-08-12 |
+| [0013](0013-deferred-user-registration-jit-provisioning.md) | Defer user registration via JIT provisioning keyed on JWT `sub` | book-core-service | Proposed | 2026-08-13 |
 
 Numbers are never reused. If a decision is reversed, mark the old ADR as
 *Superseded by NNNN* and write a new one — don't edit history away.

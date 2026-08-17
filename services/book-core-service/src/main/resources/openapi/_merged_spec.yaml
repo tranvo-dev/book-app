@@ -3,6 +3,8 @@ servers:
 - url: "http://localhost:8080/book-tracking/api"
 openapi: "3.0.3"
 paths:
+  /users/me:
+    $ref: "./book-core-api.yaml#/paths/~1users~1me"
   /books:
     $ref: "./book-core-api.yaml#/paths/~1books"
 info:

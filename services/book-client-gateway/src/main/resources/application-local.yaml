@@ -34,4 +34,8 @@ server:
 
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    # Logs outbound request headers (incl. Authorization: Bearer) to downstream core service
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
+    reactor.netty.http.client: DEBUG

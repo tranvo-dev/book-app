@@ -14,7 +14,7 @@ spring:
     gcp:
       project-id: book-app-498708
       credentials:
-        location: ${GCP_CREDENTIALS_LOCATION:file:../../keys/key.json}
+        location: classpath:keys/book-app-service-account-key.json
   servlet:
     multipart:
       max-file-size: 50MB
@@ -26,3 +26,14 @@ gcs:
 server:
   servlet:
     context-path: /
+
+logging:
+  level:
+    # Resource Server: JWT decode + bearer token validation
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2.server.resource: TRACE
+    org.springframework.security.oauth2.jwt: TRACE
+    # Logs inbound request incl. Authorization header
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    # BearerLoggingFilter — prints raw bearer token (local only)
+    com.tranvodev.book_core_service.configs.BearerLoggingFilter: DEBUG
