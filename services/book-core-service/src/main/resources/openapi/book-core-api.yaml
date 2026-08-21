@@ -84,6 +84,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /books/{bookId}/download:
+    get:
+      summary: Download a book's attachment
+      description: >-
+        Streams the binary attachment for the given book. The caller must be
+        authorized to access the book; the service resolves the stored
+        attachment from the external file storage service and returns its
+        raw bytes.
+      operationId: downloadBook
+      tags:
+        - Books
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          description: Unique identifier of the book to download.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The book attachment binary stream.
+          headers:
+            Content-Disposition:
+              description: Indicates the attachment filename.
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: Missing or invalid bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Caller is not authorized to download this book.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No book (or attachment) exists for the given id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   securitySchemes:
     bearerAuth:
