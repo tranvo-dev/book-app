@@ -1,6 +1,6 @@
 package com.tranvodev.book_core_service.services;
 
-import com.tranvodev.book_core_service.dto.UserResponse;
+import com.tranvodev.book_core_service.dtos.User;
 import com.tranvodev.book_core_service.entities.UserEntity;
 import com.tranvodev.book_core_service.mappers.UserMapper;
 import com.tranvodev.book_core_service.repositories.UsersRepository;
@@ -17,11 +17,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse resolveCurrentUser(Jwt jwt) {
+    public User resolveCurrentUser(Jwt jwt) {
         String sub = jwt.getSubject();
         String email = jwt.getClaimAsString("email");
         UserEntity possibleUser = usersRepository.findBySub(sub).orElseGet(() -> createNewUser(sub, email));
-        return userMapper.toResponse(possibleUser);
+        return userMapper.toDto(possibleUser);
     }
 
     private UserEntity createNewUser(String sub, String email) {
