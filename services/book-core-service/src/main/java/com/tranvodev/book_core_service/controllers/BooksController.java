@@ -5,7 +5,6 @@ import com.tranvodev.book_core_service.security.CurrentUserProvider;
 import com.tranvodev.book_core_service.services.BooksService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +20,7 @@ public class BooksController implements BooksApi {
 
     @Override
     public ResponseEntity<Void> uploadBook(MultipartFile file) {
-        Jwt jwt = currentUserProvider.getUserJwt();
-        this.booksService.uploadAttachment(jwt, file);
+        this.booksService.uploadAttachment(currentUserProvider.getAuthenticatedUser(), file);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
