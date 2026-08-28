@@ -1,0 +1,11 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/mvnd-sdkman:2": {
+      "version": "2.0.17"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "1.8.2"
+    }
+  }
+}
