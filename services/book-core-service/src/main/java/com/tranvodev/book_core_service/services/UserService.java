@@ -1,8 +1,8 @@
 package com.tranvodev.book_core_service.services;
 
-import com.nimbusds.jwt.JWT;
-import com.tranvodev.book_core_service.dto.UserResponse;
+import com.tranvodev.book_core_service.dtos.AuthenticatedUser;
+import com.tranvodev.book_core_service.dtos.User;
 
 public interface UserService {
-    UserResponse resolveCurrentUser(JWT jwt);
+    User resolveCurrentUser(AuthenticatedUser authenticatedUser);
 }
