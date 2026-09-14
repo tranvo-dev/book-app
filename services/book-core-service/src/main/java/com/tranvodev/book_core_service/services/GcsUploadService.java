@@ -25,8 +25,8 @@ public class GcsUploadService {
         this.bucketName = bucketName;
     }
 
-    public BlobInfo uploadFile(MultipartFile file) {
-        String fileName = String.format("%s_%s", System.currentTimeMillis(), file.getOriginalFilename());
+    public BlobInfo uploadFile(String sub, MultipartFile file) {
+        String fileName = String.format("%s/%s_%s", sub, System.currentTimeMillis(), file.getOriginalFilename());
         try {
             String extractedFileType = extrackMimeType(file);
             if (!isAllowedToUpload(extractedFileType)) {
@@ -34,7 +34,7 @@ public class GcsUploadService {
                         String.format("Not allowed file type: %s", extractedFileType), HttpStatus.BAD_REQUEST);
             }
 
-            BlobInfo blobInfo = getBlobInfo(file, fileName, extractedFileType);
+            BlobInfo blobInfo = getBlobInfo(fileName, extractedFileType);
             return storage.create(blobInfo, file.getBytes());
         } catch (IOException e) {
             throw new FileUploadException(String.format("Cannot upload file %s", fileName), e);
@@ -49,9 +49,8 @@ public class GcsUploadService {
         return ALLOWED_TYPES.contains(mimeType);
     }
 
-    private BlobInfo getBlobInfo(MultipartFile file, String fileName, String mimeType) {
+    private BlobInfo getBlobInfo(String fileName, String mimeType) {
         BlobId blobId = BlobId.of(bucketName, fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
-        return blobInfo;
+        return BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
     }
 }

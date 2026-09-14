@@ -1,14 +1,11 @@
 package com.tranvodev.book_core_service.services;
 
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.tranvodev.book_core_service.dto.UserResponse;
+import com.tranvodev.book_core_service.dtos.AuthenticatedUser;
+import com.tranvodev.book_core_service.dtos.User;
 import com.tranvodev.book_core_service.entities.UserEntity;
-import com.tranvodev.book_core_service.exceptions.UserTokenInvalidException;
 import com.tranvodev.book_core_service.mappers.UserMapper;
 import com.tranvodev.book_core_service.repositories.UsersRepository;
 import jakarta.transaction.Transactional;
-import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +17,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse resolveCurrentUser(JWT jwt) {
-        try {
-            JWTClaimsSet jwtClaimsSet = jwt.getJWTClaimsSet();
-            String sub = jwtClaimsSet.getSubject();
-            String email = jwtClaimsSet.getClaimAsString("email");
-
-            UserEntity possibleUser = usersRepository.findBySub(sub).orElseGet(() -> createNewUser(sub, email));
-
-            return userMapper.toResponse(possibleUser);
-        } catch (ParseException parseException) {
-            throw new UserTokenInvalidException("Given token is invalid");
-        }
+    public User resolveCurrentUser(AuthenticatedUser authenticatedUser) {
+        String sub = authenticatedUser.sub();
+        String email = authenticatedUser.email();
+        UserEntity possibleUser = usersRepository.findBySub(sub).orElseGet(() -> createNewUser(sub, email));
+        return userMapper.toDto(possibleUser);
     }
 
     private UserEntity createNewUser(String sub, String email) {
