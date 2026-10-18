@@ -11,11 +11,6 @@ spring:
     username: null
     password: null
     driver-class-name: org.postgresql.Driver
-  cloud:
-    gcp:
-      project-id: null
-      credentials:
-        location: null
   servlet:                                                                                                                                          
     multipart:                                                                                                                                      
       max-file-size: 50MB                                                                                              
@@ -26,12 +21,12 @@ spring:
         jwt:
           # Used by the Gateway to pull public keys and verify signatures locally
           jwk-set-uri: http://localhost:9000/oauth2/jwks
-gcs:
-  bucket-name: null
+
 cloudinary:
   cloud-name: null
   api-key: null
   api-secret: null
+
 server:
   servlet:
     context-path: /api

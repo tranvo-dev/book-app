@@ -10,18 +10,11 @@ spring:
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
-  cloud:
-    gcp:
-      project-id: book-app-498708
-      credentials:
-        location: classpath:keys/book-app-service-account-key.json
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
 
-gcs:
-  bucket-name: book-app-bucket
 cloudinary:
   cloud-name: null
   api-key: null
