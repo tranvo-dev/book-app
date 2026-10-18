@@ -3,6 +3,7 @@ package com.tranvodev.book_core_service.controllers;
 import com.tranvodev.book_core_service.api.BooksApi;
 import com.tranvodev.book_core_service.security.CurrentUserProvider;
 import com.tranvodev.book_core_service.services.BooksService;
+import java.net.URI;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -25,8 +26,8 @@ public class BooksController implements BooksApi {
 
     @Override
     public ResponseEntity<Void> uploadBook(MultipartFile file) {
-        this.booksService.uploadAttachment(currentUserProvider.getAuthenticatedUser(), file);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        URI uri = this.booksService.uploadAttachment(currentUserProvider.getAuthenticatedUser(), file);
+        return ResponseEntity.status(HttpStatus.CREATED).location(uri).build();
     }
 
     @Override

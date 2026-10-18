@@ -10,6 +10,7 @@ import com.tranvodev.book_core_service.mappers.BookMapper;
 import com.tranvodev.book_core_service.repositories.BooksRepository;
 import com.tranvodev.book_core_service.repositories.UsersRepository;
 import jakarta.transaction.Transactional;
+import java.net.URI;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class BooksService {
     }
 
     @Transactional
-    public void uploadAttachment(AuthenticatedUser authenticatedUser, MultipartFile file) {
+    public URI uploadAttachment(AuthenticatedUser authenticatedUser, MultipartFile file) {
         User user = userService.getUserInfo(authenticatedUser);
         Map uploaded = cloudinaryFileUploadService.upload(user.sub(), file);
 
@@ -55,6 +56,7 @@ public class BooksService {
         book.setAttachmentId(uploaded.get("asset_id").toString());
         book.setOwner(owner);
         booksRepository.save(book);
+        return URI.create(String.valueOf(book.getId()));
     }
 
     public Resource downloadAttachment(AuthenticatedUser authenticatedUser, UUID id) {
