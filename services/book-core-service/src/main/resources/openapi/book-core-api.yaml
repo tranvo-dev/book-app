@@ -65,6 +65,11 @@ paths:
       responses:
         '201':
           description: Book uploaded and created.
+          headers:
+            Location:
+              description: Indicates the uploaded attachment id in the database.
+              schema:
+                type: string
         '400':
           description: Invalid request (e.g. missing file or unsupported type).
           content:
