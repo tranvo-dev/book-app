@@ -6,6 +6,7 @@
 package com.tranvodev.book_core_service.api;
 
 import com.tranvodev.book_core_service.dto.ErrorResponse;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +42,83 @@ public interface BooksApi {
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
+
+    String PATH_DOWNLOAD_BOOK = "/books/{bookId}/download";
+    /**
+     * GET /books/{bookId}/download : Download a book&#39;s attachment
+     * Streams the binary attachment for the given book. The caller must be authorized to access the book; the service resolves the stored attachment from the external file storage service and returns its raw bytes.
+     *
+     * @param bookId Unique identifier of the book to download. (required)
+     * @return The book attachment binary stream. (status code 200)
+     *         or Missing or invalid bearer token. (status code 401)
+     *         or Caller is not authorized to download this book. (status code 403)
+     *         or No book (or attachment) exists for the given id. (status code 404)
+     *         or Internal server error. (status code 500)
+     */
+    @Operation(
+        operationId = "downloadBook",
+        summary = "Download a book's attachment",
+        description = "Streams the binary attachment for the given book. The caller must be authorized to access the book; the service resolves the stored attachment from the external file storage service and returns its raw bytes.",
+        tags = { "Books" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "The book attachment binary stream.", content = {
+                @Content(mediaType = "application/octet-stream", schema = @Schema(implementation = org.springframework.core.io.Resource.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = org.springframework.core.io.Resource.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Missing or invalid bearer token.", content = {
+                @Content(mediaType = "application/octet-stream", schema = @Schema(implementation = ErrorResponse.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Caller is not authorized to download this book.", content = {
+                @Content(mediaType = "application/octet-stream", schema = @Schema(implementation = ErrorResponse.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "No book (or attachment) exists for the given id.", content = {
+                @Content(mediaType = "application/octet-stream", schema = @Schema(implementation = ErrorResponse.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = {
+                @Content(mediaType = "application/octet-stream", schema = @Schema(implementation = ErrorResponse.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = BooksApi.PATH_DOWNLOAD_BOOK,
+        produces = { "application/octet-stream", "application/json" }
+    )
+    default ResponseEntity<org.springframework.core.io.Resource> downloadBook(
+        @Parameter(name = "bookId", description = "Unique identifier of the book to download.", required = true, in = ParameterIn.PATH) @PathVariable("bookId") UUID bookId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"instance\" : \"https://openapi-generator.tech\", \"detail\" : \"detail\", \"type\" : \"https://openapi-generator.tech\", \"title\" : \"title\", \"status\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"instance\" : \"https://openapi-generator.tech\", \"detail\" : \"detail\", \"type\" : \"https://openapi-generator.tech\", \"title\" : \"title\", \"status\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"instance\" : \"https://openapi-generator.tech\", \"detail\" : \"detail\", \"type\" : \"https://openapi-generator.tech\", \"title\" : \"title\", \"status\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"instance\" : \"https://openapi-generator.tech\", \"detail\" : \"detail\", \"type\" : \"https://openapi-generator.tech\", \"title\" : \"title\", \"status\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
 
     String PATH_UPLOAD_BOOK = "/books";
     /**

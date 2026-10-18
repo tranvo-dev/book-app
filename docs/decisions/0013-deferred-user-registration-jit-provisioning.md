@@ -111,7 +111,7 @@ Notes / caveats:
 - JIT currently fires only on `GET /users/me`, so other user-scoped operations assume
   a profile that may not exist; see [Gap](#gap-jit-only-fires-on-get-usersme) for the
   `CurrentUserProvider.require(Jwt)` resolution.
-- Follow-up: DB migration for `subject`, `resolveCurrentUser`, and the
+- Follow-up: DB migration for `subject`, `getUserInfo`, and the
   `GET`/`PATCH /users/me` endpoints in the OpenAPI contract.
 
 ## References

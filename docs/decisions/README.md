@@ -45,10 +45,11 @@ Small, obvious refactors or pure formatting changes don't need one.
 | [0007](0007-mapstruct-spring-component-model.md) | MapStruct mappers use `componentModel = "spring"` | global | Accepted | 2026-07-19 |
 | [0008](0008-bean-validation-annotation-fixes.md) | Don't use `@NonNull`/`@Min` for required-string validation on records | book-authorization-server | Accepted | 2026-07-19 |
 | [0009](0009-openapi-contract-first-core-service.md) | Contract-first API for book-core-service via OpenAPI Generator | book-core-service | Accepted | 2026-07-04 |
-| [0010](0010-gcs-storage-with-dedup-upload.md) | Google Cloud Storage for attachments, with duplicate-content handling | book-core-service | Accepted | 2026-06-08 |
+| [0010](0010-gcs-storage-with-dedup-upload.md) | Google Cloud Storage for attachments, with duplicate-content handling | book-core-service | Superseded by 0014 | 2026-06-08 |
 | [0011](0011-spotless-formatting-enforced-repo-wide.md) | Enforce formatting repo-wide with Spotless + pre-commit hook, not per-service | global | Accepted | 2026-07-12 |
 | [0012](0012-gateway-no-path-prefix-stripping-for-swagger.md) | Don't rely on gateway path-prefix stripping for service-hosted Swagger UI | book-client-gateway, book-core-service | Accepted | 2026-08-12 |
 | [0013](0013-deferred-user-registration-jit-provisioning.md) | Defer user registration via JIT provisioning keyed on JWT `sub` | book-core-service | Proposed | 2026-08-13 |
+| [0014](0014-cloudinary-instead-of-gcs.md) | Use Cloudinary instead of Google Cloud Storage for attachments | book-core-service | Accepted | 2026-10-18 |
 
 Numbers are never reused. If a decision is reversed, mark the old ADR as
 *Superseded by NNNN* and write a new one — don't edit history away.

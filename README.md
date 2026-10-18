@@ -31,7 +31,6 @@ The ultimate book app for surviving boring work hours. Shhh... we won't tell you
 
 | Category | Technology |
 | --- | --- |
-| Cloud Storage | Spring Cloud GCP (Google Cloud Storage) |
 | Service-to-Service | Spring Cloud OpenFeign |
 | File Processing | Apache Tika (content-type detection) |
 | JSON | Jackson 3 |

@@ -1,6 +1,6 @@
 # 0010. Google Cloud Storage for attachments, with duplicate-content handling
 
-- Status: Accepted
+- Status: Superseded by 0014
 - Date: 2026-06-08
 - Scope: book-core-service
 
