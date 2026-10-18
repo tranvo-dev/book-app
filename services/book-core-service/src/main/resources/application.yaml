@@ -28,7 +28,10 @@ spring:
           jwk-set-uri: http://localhost:9000/oauth2/jwks
 gcs:
   bucket-name: null
-  
+cloudinary:
+  cloud-name: null
+  api-key: null
+  api-secret: null
 server:
   servlet:
     context-path: /api

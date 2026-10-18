@@ -1,6 +1,9 @@
 package com.tranvodev.book_core_service.advices;
 
+import com.tranvodev.book_core_service.exceptions.FileDownloadException;
 import com.tranvodev.book_core_service.exceptions.FileUploadException;
+import com.tranvodev.book_core_service.exceptions.UserException;
+import com.tranvodev.book_core_service.exceptions.UserTokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -21,6 +24,24 @@ public class GlobalExceptionHandler {
             return ProblemDetail.forStatusAndDetail(e.getStatusCode(), "Unable to upload the file");
         }
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to upload the file");
+    }
+
+    @ExceptionHandler(FileDownloadException.class)
+    public ProblemDetail handleFileDownloadException(FileDownloadException e) {
+        if (e.getStatusCode() != null) {
+            return ProblemDetail.forStatusAndDetail(e.getStatusCode(), "Unable to download the file");
+        }
+        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to download the file");
+    }
+
+    @ExceptionHandler(UserTokenInvalidException.class)
+    public ProblemDetail handleUserTokenInvalidException(UserTokenInvalidException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ProblemDetail handleUserException(UserException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

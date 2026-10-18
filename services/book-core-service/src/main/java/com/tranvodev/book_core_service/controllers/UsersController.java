@@ -19,6 +19,6 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<UserResponse> getCurrentUser() {
         return ResponseEntity.ok(
-                userMapper.toResponse(userService.resolveCurrentUser(currentUserProvider.getAuthenticatedUser())));
+                userMapper.toResponse(userService.getOrCreateUser(currentUserProvider.getAuthenticatedUser())));
     }
 }

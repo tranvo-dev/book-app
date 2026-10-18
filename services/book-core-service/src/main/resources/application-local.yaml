@@ -6,9 +6,9 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
   datasource:
-    url: jdbc:postgresql://localhost:5433/book_core_db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/book_app_db
+    username: admin
+    password: admin
     driver-class-name: org.postgresql.Driver
   cloud:
     gcp:
@@ -22,6 +22,10 @@ spring:
 
 gcs:
   bucket-name: book-app-bucket
+cloudinary:
+  cloud-name: null
+  api-key: null
+  api-secret: null
 
 server:
   servlet:

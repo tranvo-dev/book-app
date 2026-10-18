@@ -3,13 +3,15 @@ package com.tranvodev.book_core_service.controllers;
 import com.tranvodev.book_core_service.api.BooksApi;
 import com.tranvodev.book_core_service.security.CurrentUserProvider;
 import com.tranvodev.book_core_service.services.BooksService;
+import java.util.UUID;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.UUID;
 
 @RestController
 public class BooksController implements BooksApi {
@@ -29,6 +31,13 @@ public class BooksController implements BooksApi {
 
     @Override
     public ResponseEntity<Resource> downloadBook(UUID bookId) {
-        return BooksApi.super.downloadBook(bookId);
+        Resource attachment = this.booksService.downloadAttachment(currentUserProvider.getAuthenticatedUser(), bookId);
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename(attachment.getFilename())
+                .build();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .body(attachment);
     }
 }
