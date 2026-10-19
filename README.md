@@ -40,7 +40,7 @@ The ultimate book app for surviving boring work hours. Shhh... we won't tell you
 | Tool | Purpose |
 | --- | --- |
 | Spotless | Code formatting (Palantir Java Format), enforced repo-wide |
-| Git hooks | Pre-commit `spotless:check` (`.githooks`) |
+| Git hooks | Pre-commit `spotless:check` (Java + frontend Prettier) and ESLint (`.githooks`) |
 | CODEOWNERS | Review ownership |
 
 # Project Folder Structure

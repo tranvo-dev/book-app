@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
-# Spotless check on staged Java files before commit.
+# Pre-commit: Spotless (Java + frontend via Prettier) and ESLint on staged files.
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
-SERVICE_DIR="services/book-tracking-service"
-POM="$SERVICE_DIR/pom.xml"
+FRONTEND_DIR="app/my-library"
 
-STAGED_JAVA="$(git diff --cached --name-only --diff-filter=ACM -- '*.java' | grep -v '/generated/' || true)"
+STAGED_JAVA="$(git diff --cached --name-only --diff-filter=ACM -- 'services/*.java' | grep -v '/generated/' || true)"
+STAGED_FE="$(git diff --cached --name-only --diff-filter=ACM -- "$FRONTEND_DIR/src/*.ts" "$FRONTEND_DIR/src/*.tsx" "$FRONTEND_DIR/src/*.scss" "$FRONTEND_DIR/src/*.css" || true)"
+STAGED_LINT="$(printf '%s\n' "$STAGED_FE" | grep -E '\.tsx?$' || true)"
 
-if [ -z "$STAGED_JAVA" ]; then
+STAGED_FORMAT="$(printf '%s\n%s\n' "$STAGED_JAVA" "$STAGED_FE" | sed '/^$/d')"
+
+if [ -z "$STAGED_FORMAT" ]; then
   exit 0
 fi
+
+FAILED=0
 
 PATTERN=""
 while IFS= read -r f; do
@@ -24,15 +29,34 @@ while IFS= read -r f; do
   else
     PATTERN="$PATTERN,$esc"
   fi
-done <<< "$STAGED_JAVA"
+done <<< "$STAGED_FORMAT"
 
-echo "spotless: checking staged java files..."
-if ! mvn -q -f "$POM" spotless:check -DspotlessFiles="$PATTERN"; then
+echo "spotless: checking staged files..."
+if ! mvn -q spotless:check -DspotlessFiles="$PATTERN"; then
   echo ""
   echo "spotless check failed on staged files. fix with:"
-  echo "  mvn -f $POM spotless:apply -DspotlessFiles=\"$PATTERN\""
+  echo "  mvn spotless:apply"
   echo "then re-stage and commit again."
-  exit 1
+  FAILED=1
 fi
 
-exit 0
+if [ -n "$STAGED_LINT" ]; then
+  if [ ! -d "$FRONTEND_DIR/node_modules" ]; then
+    echo "eslint: $FRONTEND_DIR/node_modules missing. run: npm --prefix $FRONTEND_DIR install"
+    exit 1
+  fi
+  echo "eslint: checking staged frontend files..."
+  # eslint resolves eslint.config.js from its cwd, so pass paths relative to the app
+  LINT_FILES=()
+  while IFS= read -r f; do
+    [ -n "$f" ] && LINT_FILES+=("${f#"$FRONTEND_DIR"/}")
+  done <<< "$STAGED_LINT"
+  if ! (cd "$FRONTEND_DIR" && npx --no-install eslint --max-warnings=0 "${LINT_FILES[@]}"); then
+    echo ""
+    echo "eslint failed on staged files. fix with:"
+    echo "  npm --prefix $FRONTEND_DIR run lint:fix"
+    FAILED=1
+  fi
+fi
+
+exit "$FAILED"

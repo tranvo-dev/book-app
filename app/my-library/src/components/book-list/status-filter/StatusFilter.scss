@@ -1,0 +1,9 @@
+.book-filter {
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+
+  &__child {
+    width: 100%;
+  }
+}

@@ -5,14 +5,14 @@
  * automatically without re-rendering. State layers use CSS `color-mix()`,
  * the same way M3 lays a translucent "on" color over a container.
  */
-import type { Components, Theme } from '@mui/material/styles';
-import { elevation, state } from './tokens';
+import type { Components, Theme } from '@mui/material/styles'
+import { elevation, state } from './tokens'
 
 /** M3 state layer: `on` color at `opacity` laid over `base`. */
 const layer = (base: string, on: string, opacity: number) =>
-  `color-mix(in srgb, ${on} ${Math.round(opacity * 100)}%, ${base})`;
+  `color-mix(in srgb, ${on} ${Math.round(opacity * 100)}%, ${base})`
 
-const toneColors = ['primary', 'secondary', 'tertiary', 'error'] as const;
+const toneColors = ['primary', 'secondary', 'tertiary', 'error'] as const
 
 export const components: Components<Omit<Theme, 'components'>> = {
   // ---------------------------------------------------------------- Global
@@ -54,7 +54,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
         paddingInline: 16,
         variants: [
           { props: { size: 'small' }, style: { minHeight: 36, paddingInline: 12 } },
-          { props: { size: 'large' }, style: { minHeight: 52, paddingInline: 22, fontSize: '1rem' } },
+          {
+            props: { size: 'large' },
+            style: { minHeight: 52, paddingInline: 22, fontSize: '1rem' },
+          },
           // M3 outlined buttons use the neutral outline, not a tinted border
           {
             props: { variant: 'outlined' },
@@ -121,7 +124,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
       root: ({ theme }) => ({
         backgroundImage: 'none', // no white overlay in dark mode
         variants: [
-          { props: { variant: 'outlined' }, style: { borderColor: theme.vars.palette.surface.outlineVariant } },
+          {
+            props: { variant: 'outlined' },
+            style: { borderColor: theme.vars.palette.surface.outlineVariant },
+          },
         ],
       }),
       rounded: ({ theme }) => ({ borderRadius: theme.radius.md }),
@@ -203,12 +209,16 @@ export const components: Components<Omit<Theme, 'components'>> = {
         borderRadius: theme.radius.sm,
         backgroundColor: theme.vars.palette.background.paper,
         '& .MuiOutlinedInput-notchedOutline': { borderColor: theme.vars.palette.surface.outline },
-        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: theme.vars.palette.text.primary },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.vars.palette.text.primary,
+        },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.vars.palette.primary.main,
           borderWidth: 2,
         },
-        '&.Mui-error .MuiOutlinedInput-notchedOutline': { borderColor: theme.vars.palette.error.main },
+        '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.vars.palette.error.main,
+        },
         '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
           borderColor: theme.vars.palette.action.disabledBackground,
         },
@@ -343,7 +353,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
               color: theme.vars.palette[color].onContainer,
             },
           })),
-          { props: { variant: 'outlined' }, style: { borderColor: theme.vars.palette.surface.outline } },
+          {
+            props: { variant: 'outlined' },
+            style: { borderColor: theme.vars.palette.surface.outline },
+          },
         ],
       }),
     },
@@ -413,4 +426,4 @@ export const components: Components<Omit<Theme, 'components'>> = {
       },
     },
   },
-};
+}

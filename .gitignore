@@ -3,7 +3,7 @@
 ### IDE ###
 .idea/
 *.iml
-/target/spotless-index
+/target/
 
 ### Local Development ###
 /services/book-core-service/src/main/resources/keys/
