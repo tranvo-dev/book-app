@@ -61,6 +61,9 @@ const buildPalette = (r: SchemeRoles, background: { default: string; paper: stri
 // 25 MUI shadow slots → M3 levels 0–5 (anything above 5 reuses level 5)
 const shadows = Array.from({ length: 25 }, (_, i) => elevation[Math.min(i, 5)]) as Shadows;
 
+// MUI default breakpoints, so this matches the rest of the theme
+const desktop = createTheme().breakpoints.up('sm'); // 600px and up
+
 export const opaliteTheme = createTheme({
   // ------------------------------------------------------------- CSS variables
   cssVariables: {
@@ -91,12 +94,23 @@ export const opaliteTheme = createTheme({
     fontWeightMedium: 500,
     fontWeightBold: 700,
 
-    // Serif headings (M3 headline / title-large)
-    h1: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '2rem', lineHeight: 1.25, letterSpacing: 0 },
-    h2: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2857, letterSpacing: 0 },
-    h3: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.5rem', lineHeight: 1.3333, letterSpacing: 0 },
-    h4: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.375rem', lineHeight: 1.2727, letterSpacing: 0 },
-    h5: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.1875rem', lineHeight: 1.4, letterSpacing: 0 },
+    // Serif headings — matched to the Book App prototype (mobile first)
+    // Page title — "Welcome back, Tran"
+    h1: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.5rem', lineHeight: 1.25, letterSpacing: 0,
+      [desktop]: { fontSize: '2rem' } },            // 24 → 32
+    // Hero card title — "12-day streak", "Your shelf is empty"
+    h2: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.375rem', lineHeight: 1.25, letterSpacing: 0,
+      [desktop]: { fontSize: '1.5rem' } },          // 22 → 24
+    // Section title — "Your library"
+    h3: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.25rem', lineHeight: 1.3, letterSpacing: 0,
+      [desktop]: { fontSize: '1.375rem' } },        // 20 → 22
+    // Card title — "Reading days", "Getting started", "Nothing in progress"
+    h4: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.125rem', lineHeight: 1.3, letterSpacing: 0,
+      [desktop]: { fontSize: '1.1875rem' } },       // 18 → 19
+    // Book title — "Spring in Action, 6th Edition"
+    h5: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '0.9375rem', lineHeight: 1.35, letterSpacing: 0,
+      [desktop]: { fontSize: '1.0625rem' } },       // 15 → 17
+    // Not used in the design — kept as M3 title-medium
     h6: { fontFamily: fonts.plain, fontWeight: 600, fontSize: '1rem', lineHeight: 1.5, letterSpacing: '0.009375rem' },
 
     // Sans text (M3 title-medium/small, body, label)
@@ -105,14 +119,17 @@ export const opaliteTheme = createTheme({
     body1: { fontSize: '1rem', lineHeight: 1.5, letterSpacing: '0.03125rem' },
     body2: { fontSize: '0.875rem', lineHeight: 1.4286, letterSpacing: '0.015625rem' },
     caption: { fontSize: '0.75rem', lineHeight: 1.3333, letterSpacing: '0.025rem' },
-    overline: { fontWeight: 700, fontSize: '0.75rem', lineHeight: 1.3333, letterSpacing: '0.08em', textTransform: 'uppercase' },
+    // Section label — "CONTINUE READING"
+    overline: { fontWeight: 700, fontSize: '0.8125rem', lineHeight: 1.4, letterSpacing: '0.06em', textTransform: 'uppercase' },
     button: { fontWeight: 600, fontSize: '0.9375rem', lineHeight: 1.4286, letterSpacing: '0.00625rem', textTransform: 'none' },
 
     // Extra variants (see augment.ts)
     displayLarge: { fontFamily: fonts.brand, fontWeight: 400, fontSize: '3.5625rem', lineHeight: 1.1228, letterSpacing: '-0.015625rem' },
     displayMedium: { fontFamily: fonts.brand, fontWeight: 400, fontSize: '2.8125rem', lineHeight: 1.1556 },
     displaySmall: { fontFamily: fonts.brand, fontWeight: 400, fontSize: '2.25rem', lineHeight: 1.2222 },
-    stat: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.875rem', lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' },
+    // Big numbers — "12 days", "3 books"
+    stat: { fontFamily: fonts.brand, fontWeight: 700, fontSize: '1.375rem', lineHeight: 1.2, fontVariantNumeric: 'tabular-nums',
+      [desktop]: { fontSize: '1.875rem' } },        // 22 → 30
     labelLarge: { fontFamily: fonts.plain, fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.4286, letterSpacing: '0.00625rem' },
     labelMedium: { fontFamily: fonts.plain, fontWeight: 600, fontSize: '0.75rem', lineHeight: 1.3333, letterSpacing: '0.03125rem' },
     labelSmall: { fontFamily: fonts.plain, fontWeight: 600, fontSize: '0.6875rem', lineHeight: 1.4545, letterSpacing: '0.03125rem' },
