@@ -2,7 +2,7 @@ spring:
   application:
     name: book-authorization-server
   datasource:
-    url: jdbc:postgresql://localhost:5432/book_auth_db
+    url: jdbc:postgresql://localhost:5433/book_auth_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
