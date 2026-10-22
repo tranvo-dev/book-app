@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" width="220" height="150" role="img" aria-label="An empty bookshelf with room for a new book">
+
+<ellipse cx="110" cy="134" rx="92" ry="8" fill="#EAEAF5"/>
+<rect x="26" y="112" width="168" height="10" rx="3" fill="#C6C8E6"/>
+<rect x="46" y="50" width="26" height="62" rx="3" fill="none" stroke="#B9BAD6" stroke-width="2" stroke-dasharray="5 4"/>
+<rect x="78" y="62" width="22" height="50" rx="3" fill="none" stroke="#B9BAD6" stroke-width="2" stroke-dasharray="5 4"/>
+<rect x="108" y="56" width="24" height="56" rx="3" fill="none" stroke="#B9BAD6" stroke-width="2" stroke-dasharray="5 4" transform="rotate(10 120 112)"/>
+<rect x="148" y="58" width="28" height="54" rx="3" fill="#F3D6E4" stroke="#6366AE" stroke-width="2"/>
+<path d="M162 76v18M153 85h18" stroke="#6366AE" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M170 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#DCEBF5" stroke="#6366AE" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M42 28l2 4.5 4.5 2-4.5 2-2 4.5-2-4.5-4.5-2 4.5-2z" fill="#F3D6E4"/>
+</svg>

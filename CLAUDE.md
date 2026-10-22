@@ -36,14 +36,16 @@ docker compose -f services/<service>/compose.yaml up -d
 
 ## Formatting (enforced)
 
-Spotless (Palantir Java Format) is configured ONCE at the repo-root `pom.xml` and formats every service's Java. The root pom is a standalone formatting aggregator — it does NOT declare services as modules.
+Spotless is configured ONCE at the repo-root `pom.xml`: Palantir Java Format for every service's Java, and Prettier (using `app/my-library/.prettierrc.json`) for the frontend's `src/**/*.{ts,tsx,scss,css}`. Keep the Spotless `prettierVersion` in sync with `prettier` in `app/my-library/package.json`. The root pom is a standalone formatting aggregator — it does NOT declare services as modules.
 
 ```bash
-mvn spotless:apply    # format all services
+mvn spotless:apply    # format all services + frontend
 mvn spotless:check    # verify (pre-commit hook + CI)
+npm --prefix app/my-library run format    # Prettier only (frontend)
+npm --prefix app/my-library run lint      # ESLint (frontend)
 ```
 
-Pre-commit hook (`.githooks/pre-commit`) runs `spotless:check`. Always run `mvn spotless:apply` before committing or the commit will be rejected.
+Pre-commit hook (`.githooks/pre-commit`, enable with `git config core.hooksPath .githooks`) runs `spotless:check` on staged Java + frontend files and ESLint (`--max-warnings=0`) on staged `.ts/.tsx`. Always run `mvn spotless:apply` before committing or the commit will be rejected.
 
 ## Package convention
 

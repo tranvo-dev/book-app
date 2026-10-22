@@ -14,7 +14,7 @@
 		services as reactor <modules> so that each service keeps its own independent
 		Spring Boot parent version and build lifecycle.
 
-		Format every service's Java from the repo root:
+		Format every service's Java and the frontend (app/*) from the repo root:
 		    mvn spotless:apply
 		Check without modifying (used by the pre-commit hook / CI):
 		    mvn spotless:check
@@ -38,6 +38,22 @@
 						<trimTrailingWhitespace/>
 						<endWithNewline/>
 					</java>
+					<!-- Frontend: delegates to Prettier using the app's own config. Keep the
+					     version in sync with prettier in app/my-library/package.json. -->
+					<formats>
+						<format>
+							<includes>
+								<include>app/*/src/**/*.ts</include>
+								<include>app/*/src/**/*.tsx</include>
+								<include>app/*/src/**/*.scss</include>
+								<include>app/*/src/**/*.css</include>
+							</includes>
+							<prettier>
+								<prettierVersion>3.9.10</prettierVersion>
+								<configFile>${project.basedir}/app/my-library/.prettierrc.json</configFile>
+							</prettier>
+						</format>
+					</formats>
 				</configuration>
 				<executions>
 					<execution>
