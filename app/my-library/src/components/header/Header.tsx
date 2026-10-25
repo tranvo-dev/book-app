@@ -3,7 +3,7 @@ import './Header.scss'
 
 export function Header() {
   return (
-    <header className="container">
+    <header className="header-container">
       <div className="header">
         <a href="/" className="header__link">
           Book App
